@@ -2,7 +2,6 @@ package com.scaler.projectservice.controller;
 
 
 import com.scaler.projectservice.dto.CreateProductRequestDTO;
-import com.scaler.projectservice.models.Product;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
