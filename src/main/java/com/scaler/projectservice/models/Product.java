@@ -1,5 +1,9 @@
 package com.scaler.projectservice.models;
 
+
+import lombok.Data;
+
+@Data
 public class Product extends BaseModel{
     private String Title;
     private double Price;

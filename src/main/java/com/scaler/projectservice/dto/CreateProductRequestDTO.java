@@ -10,6 +10,8 @@ public class CreateProductRequestDTO {
     private String productName;
     private String ImageUrl;
     private String Category;
+    private String Description;
     private double Price;
+
 
 }
