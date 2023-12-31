@@ -1,15 +1,14 @@
 package com.scaler.projectservice.controller;
 
-import com.scaler.projectservice.dto.CreateCategoryRequestDTO;
-import com.scaler.projectservice.dto.CreateProductRequestDTO;
+import com.scaler.projectservice.dto.ProductRequestDTO;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/cart")
-public class CartrController {
+public class CartController {
 
     @PostMapping("/")
-    public String CreateCart(@RequestBody CreateProductRequestDTO dto){
+    public String CreateCart(@RequestBody ProductRequestDTO dto){
         return "Cart is created";
     }
 

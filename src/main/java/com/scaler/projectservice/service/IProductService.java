@@ -1,16 +1,16 @@
 package com.scaler.projectservice.service;
 
-import com.scaler.projectservice.dto.CreateProductRequestDTO;
-import com.scaler.projectservice.faksstoreapi.FakeStoreProductResponse;
+import com.scaler.projectservice.dto.ProductRequestDTO;
+import com.scaler.projectservice.models.Product;
 
 import java.util.List;
 
 public interface IProductService {
-    FakeStoreProductResponse getProductById(Long productId);
+    Product getProductById(Long productId);
 
-    List<FakeStoreProductResponse> getAllProducts();
+    List<Product> getAllProducts();
 
-    FakeStoreProductResponse saveProduct(CreateProductRequestDTO dto);
-    FakeStoreProductResponse updateProduct(Long productId, CreateProductRequestDTO dto);
-    FakeStoreProductResponse patchProduct(Long productId, CreateProductRequestDTO dto);
+    Product saveProduct(ProductRequestDTO dto);
+    Product updateProduct(Long productId, ProductRequestDTO dto);
+    Product patchProduct(Long productId, Product dto) throws Exception;
 }

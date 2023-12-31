@@ -1,7 +1,6 @@
 package com.scaler.projectservice.controller;
 
-import com.scaler.projectservice.dto.CreateCategoryRequestDTO;
-import com.scaler.projectservice.models.Category;
+import com.scaler.projectservice.dto.CategoryRequestDTO;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,7 +13,7 @@ public class CategoryController {
     }
 
     @PostMapping("/")
-    public String createCategory(@RequestBody CreateCategoryRequestDTO dto){
+    public String createCategory(@RequestBody CategoryRequestDTO dto){
         return dto.getName() + " Category is created";
     }
 
