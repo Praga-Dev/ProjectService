@@ -10,7 +10,8 @@ public interface IProductService {
 
     List<Product> getAllProducts();
 
-    Product saveProduct(ProductRequestDTO dto);
-    Product updateProduct(Long productId, ProductRequestDTO dto);
-    Product patchProduct(Long productId, Product dto) throws Exception;
+    Product saveProduct(Product product);
+    Product updateProduct(Long productId, Product product);
+    Product patchProduct(Long productId, Product product) throws Exception;
+    Product deleteProductById(Long productId);
 }

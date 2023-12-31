@@ -1,114 +1,112 @@
 package com.scaler.projectservice.service;
 
-import com.scaler.projectservice.dto.ProductRequestDTO;
-import com.scaler.projectservice.faksstoreapi.FakeStoreProductRequestDTO;
+import com.scaler.projectservice.faksstoreapi.FakeStoreClient;
 import com.scaler.projectservice.faksstoreapi.FakeStoreProductResponse;
 import com.scaler.projectservice.mapper.ProductMapper;
 import com.scaler.projectservice.models.Product;
-import com.scaler.projectservice.utility.HttpUtil;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class ProductService implements IProductService {
 
     RestTemplateBuilder restTemplate;
+    private final FakeStoreClient fakeStoreClient;
 
-    public ProductService(RestTemplateBuilder restTemplate) {
-        this.restTemplate = restTemplate;
+    public ProductService(FakeStoreClient fakeStoreClient) {
+        this.fakeStoreClient = fakeStoreClient;
     }
 
     @Override
     public Product getProductById(Long productId) {
-        FakeStoreProductResponse dto = restTemplate.build().
-                getForEntity("https://fakestoreapi.com/products/{id}",
-                        FakeStoreProductResponse.class, productId)
-                .getBody();
+        try {
+            FakeStoreProductResponse fakeStoreProductResponse = fakeStoreClient.getProductById(productId);
 
-        Product p = ProductMapper.getProductFromFakeStoreProduct(dto);
-        return p;
+            if (fakeStoreProductResponse == null){
+                throw new Exception("fakeStoreProductResponse is null");
+            }
+
+            return ProductMapper.getProductFromFakeStoreProduct(fakeStoreProductResponse);
+
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public List<Product> getAllProducts() {
-        FakeStoreProductResponse[] dto =  restTemplate.build().
-                getForEntity("https://fakestoreapi.com/products",
-                        FakeStoreProductResponse[].class).getBody();
+        try {
+            FakeStoreProductResponse[] fakeStoreProductResponseList =  fakeStoreClient.getProducts();
+            if(fakeStoreProductResponseList == null){
+                throw new Exception("response is null");
+            }
 
-        if(dto == null){
-            // TODO raise exception
+            return ProductMapper.getProductsFromFakeStoreProductList(fakeStoreProductResponseList);
+
+        }catch (Exception e){
+            throw new RuntimeException(e);
         }
-
-        List<Product> products = ProductMapper.getProductsFromFakeStoreProductList(dto);
-        return products;
     }
 
     @Override
-    public Product saveProduct(ProductRequestDTO dto) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+    public Product saveProduct(Product product) {
+        try {
+            FakeStoreProductResponse response = fakeStoreClient.saveProduct(product);
 
-        FakeStoreProductRequestDTO fakeStoreProductRequestDTO = new FakeStoreProductRequestDTO();
-        fakeStoreProductRequestDTO.setTitle("Krishna");
-        fakeStoreProductRequestDTO.setCategory("Noida");
-        fakeStoreProductRequestDTO.setDescription("Desc");
-        fakeStoreProductRequestDTO.setImage("");
-        fakeStoreProductRequestDTO.setPrice(100.00);
+            if (response == null){
+                throw new Exception("response is null");
+            }
 
-        HttpEntity<FakeStoreProductRequestDTO> requestEntity = new HttpEntity<>(fakeStoreProductRequestDTO, headers);
-
-        FakeStoreProductResponse response =  restTemplate.build().
-                postForEntity("https://fakestoreapi.com/products",
-                        requestEntity, FakeStoreProductResponse.class).getBody();
-
-        return ProductMapper.getProductFromFakeStoreProduct(response);
-    }
-
-    @Override
-    public Product updateProduct(Long productId, ProductRequestDTO dto) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        FakeStoreProductRequestDTO fakeStoreProductRequestDTO = new FakeStoreProductRequestDTO();
-        fakeStoreProductRequestDTO.setTitle(dto.getProductName());
-        fakeStoreProductRequestDTO.setCategory(dto.getCategory());
-        fakeStoreProductRequestDTO.setDescription(dto.getDescription());
-        fakeStoreProductRequestDTO.setImage(dto.getImageUrl());
-        fakeStoreProductRequestDTO.setPrice(dto.getPrice());
-
-        HttpEntity<FakeStoreProductRequestDTO> requestEntity = new HttpEntity<>(fakeStoreProductRequestDTO, headers);
-
-        FakeStoreProductResponse updateProductResponse =  restTemplate.build().
-                postForEntity("https://fakestoreapi.com/products",
-                        requestEntity, FakeStoreProductResponse.class).getBody();
-
-        return ProductMapper.getProductFromFakeStoreProduct(updateProductResponse);
-    }
-
-    @Override
-    public Product patchProduct(Long productId, Product dto) throws Exception {
-        Product existingProduct = getProductById(productId);
-
-        if (Objects.isNull(existingProduct)){
-            throw new Exception("Product does not exist");
+            return ProductMapper.getProductFromFakeStoreProduct(response);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+    }
 
-        FakeStoreProductRequestDTO requestDTO = new FakeStoreProductRequestDTO();
-        requestDTO.setCategory(dto.getCategory());
-        requestDTO.setPrice(dto.getPrice());
-        requestDTO.setImage(dto.getImage());
-        requestDTO.setTitle(dto.getTitle());
+    @Override
+    public Product updateProduct(Long productId, Product product) {
+        try {
+            FakeStoreProductResponse response = fakeStoreClient.updateProduct(productId, product);
 
-        ResponseEntity<FakeStoreProductResponse> response = HttpUtil.requestForEntity(
-                restTemplate,
-                HttpMethod.PATCH,
-                "https://fakestoreapi.com/products/{id}",
-                requestDTO, FakeStoreProductResponse.class, productId);
+            if (response == null){
+                throw new Exception("response is null");
+            }
 
-        return ProductMapper.getProductFromFakeStoreProduct(response.getBody());
+            return ProductMapper.getProductFromFakeStoreProduct(response);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Product patchProduct(Long productId, Product product) {
+        try {
+            FakeStoreProductResponse response = fakeStoreClient.patchProduct(productId, product);
+
+            if (response == null){
+                throw new Exception("response is null");
+            }
+
+            return ProductMapper.getProductFromFakeStoreProduct(response);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Product deleteProductById(Long productId) {
+        try {
+            FakeStoreProductResponse response = fakeStoreClient.deleteProductById(productId);
+
+            if (response == null){
+                throw new Exception("response is null");
+            }
+
+            return ProductMapper.getProductFromFakeStoreProduct(response);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

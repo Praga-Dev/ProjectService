@@ -26,7 +26,7 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public HttpEntity<ProductResponseDTO> getProductById(@PathVariable("productId") Long productId) throws Exception {
+    public HttpEntity<ProductResponseDTO> getProductById(@PathVariable("productId") Long productId){
         Product data =  productService.getProductById(productId);
 
         try{
@@ -55,14 +55,14 @@ public class ProductController {
 
     @PostMapping("/")
     public HttpEntity<ProductResponseDTO> createProduct(@RequestBody ProductRequestDTO dto){
-        Product response = productService.saveProduct(dto);
+        Product response = productService.saveProduct(ProductMapper.getProductFromCreateRequestDTO(dto));
         ProductResponseDTO responseDTO = ProductMapper.getProductResponseDTOFromProduct(response);
         return new ResponseEntity<>(responseDTO,HttpStatus.OK);
     }
 
     @PutMapping("/{productId}")
     public HttpEntity<ProductResponseDTO> updateProduct(@PathVariable("productId") Long productId, @RequestBody ProductRequestDTO dto){
-        Product response = productService.updateProduct(productId, dto);
+        Product response = productService.updateProduct(productId, ProductMapper.getProductFromCreateRequestDTO(dto));
         ProductResponseDTO responseDTO = ProductMapper.getProductResponseDTOFromProduct(response);
         return new ResponseEntity<>(responseDTO,HttpStatus.OK);
     }
@@ -76,9 +76,24 @@ public class ProductController {
             ProductResponseDTO responseDTO = ProductMapper.getProductResponseDTOFromProduct(product);
             return new ResponseEntity<>(responseDTO, HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw e;
         }
-
     }
+
+    @DeleteMapping("/{productId}")
+    public HttpEntity<ProductResponseDTO> deleteProductById(@PathVariable("productId") Long productId){
+
+        try{
+            Product product =  productService.deleteProductById(productId);
+
+
+            ProductResponseDTO responseDTO = ProductMapper.getProductResponseDTOFromProduct(product);
+            return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
