@@ -5,6 +5,8 @@ import com.scaler.projectservice.dto.ProductResponseDTO;
 import com.scaler.projectservice.mapper.ProductMapper;
 import com.scaler.projectservice.models.Product;
 import com.scaler.projectservice.service.IProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,8 @@ import java.util.Objects;
 public class ProductController {
     private final IProductService productService;
 
-    public ProductController(IProductService productService) {
+    @Autowired
+    public ProductController(@Qualifier("selfProductService") IProductService productService) {
         this.productService = productService;
     }
 

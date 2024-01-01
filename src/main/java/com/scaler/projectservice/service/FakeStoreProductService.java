@@ -4,19 +4,24 @@ import com.scaler.projectservice.faksstoreapi.FakeStoreClient;
 import com.scaler.projectservice.faksstoreapi.FakeStoreProductResponse;
 import com.scaler.projectservice.mapper.ProductMapper;
 import com.scaler.projectservice.models.Product;
+import com.scaler.projectservice.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ProductService implements IProductService {
+@Qualifier("fakeStoreProductService")
+public class FakeStoreProductService implements IProductService {
 
     RestTemplateBuilder restTemplate;
     private final FakeStoreClient fakeStoreClient;
+    ProductRepository productRepository;
 
-    public ProductService(FakeStoreClient fakeStoreClient) {
+    public FakeStoreProductService(FakeStoreClient fakeStoreClient, ProductRepository productRepository) {
         this.fakeStoreClient = fakeStoreClient;
+        this.productRepository = productRepository;
     }
 
     @Override

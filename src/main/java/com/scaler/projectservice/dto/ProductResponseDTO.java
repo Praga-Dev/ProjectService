@@ -1,5 +1,6 @@
 package com.scaler.projectservice.dto;
 
+import com.scaler.projectservice.models.Category;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -7,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductResponseDTO {
     private String productName;
-    private String category;
+    private Category category;
     private String imageURL;
     private Double price;
     private String Description;
